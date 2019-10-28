@@ -36,6 +36,6 @@ public class Passphrase {
 
   public void setWords(List<String> words) {
     this.words = words;
-
   }
+
 }

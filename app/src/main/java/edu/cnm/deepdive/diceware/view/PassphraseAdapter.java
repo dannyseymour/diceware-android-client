@@ -1,7 +1,6 @@
 package edu.cnm.deepdive.diceware.view;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,13 @@ import edu.cnm.deepdive.diceware.model.Passphrase;
 import edu.cnm.deepdive.diceware.view.PassphraseAdapter.Holder;
 import java.util.List;
 
-public class PassphraseAdapter extends RecyclerView.Adapter<Holder>{
+public class PassphraseAdapter extends RecyclerView.Adapter<Holder> {
+
   private final Context context;
   private final List<Passphrase> passphrases;
 
   public PassphraseAdapter(Context context,
       List<Passphrase> passphrases) {
-
     this.context = context;
     this.passphrases = passphrases;
   }
@@ -42,15 +41,19 @@ public class PassphraseAdapter extends RecyclerView.Adapter<Holder>{
     return passphrases.size();
   }
 
-  class Holder extends RecyclerView.ViewHolder{
-  private final View view;
+  class Holder extends RecyclerView.ViewHolder {
+
+    private final View view;
 
     private Holder(@NonNull View itemView) {
       super(itemView);
       view = itemView;
     }
-    private void bind(Passphrase passphrase){
+
+    private void bind(Passphrase passphrase) {
       ((TextView) view).setText(passphrase.getKey());
     }
+
   }
+
 }

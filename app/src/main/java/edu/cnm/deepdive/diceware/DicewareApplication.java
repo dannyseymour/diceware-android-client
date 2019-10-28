@@ -9,6 +9,6 @@ public class DicewareApplication extends Application {
   public void onCreate() {
     super.onCreate();
     GoogleSignInService.setApplicationContext(this);
-
   }
+
 }

@@ -20,21 +20,22 @@ import retrofit2.http.Path;
 
 public interface DicewareService {
 
-
   @GET("passphrases/")
   Observable<List<Passphrase>> getAll(@Header("Authorization") String token);
+
+  @GET("passphrases/{id}")
+  Single<Passphrase> get(@Header("Authorization") String token,
+      @Path("id") long id);
+
+  @GET("passphrases/{key}")
+  Single<Passphrase> get(@Header("Authorization") String token,
+      @Path("key") String key);
 
   @DELETE("passphrases/{id}")
   void delete(@Header("Authorization") String token, @Path("id") long id);
 
   @PUT("passphrases/{id}")
-  Single<Passphrase> put(@Header("Authorization") String token, @Path("id")long id, @Body Passphrase passphrase);
-
-  @GET("passphrases/{id}")
-  Single<List<Passphrase>> getAll(@Header("Authorization") String token, @Path("id") long id);
-
-  @GET("passphrases/{key}")
-    Single<List<Passphrase>> getAll(@Header("Authorization") String token, @Path("id") String id);
+  Single<Passphrase> put(@Header("Authorization") String token, @Path("id") long id, @Body Passphrase passphrase);
 
   @POST("passphrases/")
   Single<Passphrase> post(@Header("Authorization") String token, @Body Passphrase passphrase);
@@ -42,12 +43,14 @@ public interface DicewareService {
   static DicewareService getInstance() {
     return InstanceHolder.INSTANCE;
   }
-  class InstanceHolder{
+
+  class InstanceHolder {
+
     private static final DicewareService INSTANCE;
-    static{
-      //TODO add logging interceptor when it works
+    static {
+      // TODO Investigate logging interceptor issues.
       Gson gson = new GsonBuilder()
-      .excludeFieldsWithoutExposeAnnotation()
+          .excludeFieldsWithoutExposeAnnotation()
           .create();
       Retrofit retrofit = new Retrofit.Builder()
           .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -56,6 +59,7 @@ public interface DicewareService {
           .build();
       INSTANCE = retrofit.create(DicewareService.class);
     }
+
   }
 
 }

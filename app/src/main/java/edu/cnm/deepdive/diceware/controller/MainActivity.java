@@ -1,6 +1,8 @@
 package edu.cnm.deepdive.diceware.controller;
 
+import android.content.ReceiverCallNotAllowedException;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView passphraseList = findViewById(R.id.keyword_list);
     GoogleSignInService.getInstance().getAccount().observe(this, (account) -> {
       String token = getString(R.string.oauth_header, account.getIdToken());
+      Log.d("Oauth2.0 token", token);
       DicewareService.getInstance().getAll(token)
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
@@ -44,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
             passphraseList.setAdapter(adapter);
           });
     });
-    String token = getString(R.string.oauth_header);
-
   }
 
   @Override
