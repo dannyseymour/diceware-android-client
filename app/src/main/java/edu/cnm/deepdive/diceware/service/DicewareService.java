@@ -1,0 +1,59 @@
+package edu.cnm.deepdive.diceware.service;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import edu.cnm.deepdive.diceware.model.Passphrase;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import java.util.List;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+
+public interface DicewareService {
+
+  @GET("passphrases/")
+  Observable<List<Passphrase>> getAll(@Header("Authorization") String token);
+
+  @DELETE("passphrases/{id}")
+  void delete(@Header("Authorization") String token, @Path("id") long id);
+
+  @PUT("passphrases/{id}")
+  Single<Passphrase> put(@Header("Authorization") String token, @Path("id")long id, @Body Passphrase passphrase);
+
+  @GET("passphrases/{id}")
+  Single<List<Passphrase>> getAll(@Header("Authorization") String token, @Path("id") long id);
+
+  @GET("passphrases/{key}")
+    Single<List<Passphrase>> getAll(@Header("Authorization") String token, @Path("id") String id);
+
+  @POST("passphrases/")
+  Single<Passphrase> post(@Header("Authorization") String token, @Body Passphrase passphrase);
+
+  static DicewareService getInstance(){
+
+  }
+  static Diceware Service.getInstance();
+  class InstanceHolder{
+    private static final DicewareService INSTANCE;
+    static{
+      //TODO add logging interceptor when it works
+      Gson gson = new GsonBuilder()
+      .excludeFieldsWithoutExposeAnnotation()
+          .create();
+      Retrofit retrofit = new Retrofit.Builder()
+          .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+          .addConverterFactory(GsonConverterFactory.create(gson))
+          .build();
+      INSTANCE = retrofit.reate();
+    }
+  }
+
+}
