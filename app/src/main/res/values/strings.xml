@@ -3,4 +3,6 @@
   <string name="action_settings">Settings</string>
   <string name="login_failure_message">Unable to Log In With Those Credentials</string>
   <string name="oauth_header">Bearer %s</string>
+  <string name="sign_out">Sign Out</string>
+  <string name="delete">Delete</string>
 </resources>
