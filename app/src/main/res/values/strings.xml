@@ -5,4 +5,5 @@
   <string name="oauth_header">Bearer %s</string>
   <string name="sign_out">Sign Out</string>
   <string name="delete">Delete</string>
+  <string name="refresh">refresh</string>
 </resources>

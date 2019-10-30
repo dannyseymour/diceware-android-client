@@ -3,6 +3,11 @@
   xmlns:tools="http://schemas.android.com/tools"
   tools:context="edu.cnm.deepdive.diceware.controller.MainActivity">
   <item
+    android:id="@+id/refresh"
+    android:title="@string/refresh"
+    android:icon="@drawable/ic_refresh_black"
+    app:showAsAction="always"/>
+  <item
   android:id="@+id/action_settings"
   android:title="@string/action_settings"
   app:showAsAction="never"/>
