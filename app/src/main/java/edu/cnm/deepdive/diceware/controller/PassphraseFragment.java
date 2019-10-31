@@ -1,86 +1,88 @@
 package edu.cnm.deepdive.diceware.controller;
 
-
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import edu.cnm.deepdive.diceware.R;
 import edu.cnm.deepdive.diceware.model.Passphrase;
+import java.util.Arrays;
 
-/**
- * A simple {@link Fragment} subclass. Use the {@link PassphraseFragment#newInstance} factory method
- * to create an instance of this fragment.
- */
 public class PassphraseFragment extends DialogFragment {
-  private OnCompleteListener listener;
+
   private Passphrase passphrase;
+  private EditText passphraseKey;
+  private EditText passphraseWords;
 
-
-  public static PassphraseFragment newInstance(){
+  public static PassphraseFragment newInstance() {
     return newInstance(null);
   }
 
-  public OnCompleteListener getListener() {
-    return listener;
-  }
-
-  public void setListener(
-      OnCompleteListener listener) {
-    this.listener = listener;
-  }
-
-  public Passphrase getPassphrase() {
-    return passphrase;
-  }
-
-  public void setPassphrase(Passphrase passphrase) {
-    this.passphrase = passphrase;
+  public static PassphraseFragment newInstance(Passphrase passphrase) {
+    PassphraseFragment fragment = new PassphraseFragment();
+    Bundle args = new Bundle();
+    if (passphrase != null) {
+      args.putSerializable("passphrase", passphrase);
+    }
+    fragment.setArguments(args);
+    return fragment;
   }
 
   @NonNull
   @Override
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     Passphrase temp = (Passphrase) getArguments().getSerializable("passphrase");
-    Passphrase passphrase = (temp!=null) ? temp: new Passphrase();
-    View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_passphrase2, null);
-    EditText passphraseKey = view.findViewById(R.id.passphrase_key);
-    if (passphrase.getKey()!= null){
-      passphraseKey.setText(passphrase.getKey());
+    passphrase = (temp != null) ? temp : new Passphrase();
+    View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_passphrase, null);
+    passphraseKey = view.findViewById(R.id.passphrase_key);
+    passphraseWords = view.findViewById(R.id.passphrase_words);
+    if (savedInstanceState == null) {
+      populateFields();
     }
-    return new AlertDialog.Builder(getContext())
-        .setTitle("Passphrase Details")
+    return new Builder(getContext())
+        .setTitle(getContext().getString(R.string.passphrase_details))
         .setView(view)
-        .setNegativeButton("Cancel",(dialog,button)->{})
-        .setPositiveButton("Ok",(dialog, button)->{
-          if (listener != null) {
-            passphrase.setKey(passphraseKey.getText().toString());
-            listener.complete(passphrase);
-          }
-        })
-      .create();
+        .setNegativeButton(getContext().getString(R.string.cancel), (dialog, button) -> {})
+        .setPositiveButton(getContext().getString(R.string.ok), (dialog, button) -> populatePassphrase())
+        .create();
   }
 
-  public static PassphraseFragment newInstance(Passphrase passphrase) {
-    PassphraseFragment fragment = new PassphraseFragment();
-    Bundle args = new Bundle();
-    if(passphrase != null) {
-      args.putSerializable("passphrase", passphrase);
+  private void populatePassphrase() {
+    passphrase.setKey(passphraseKey.getText().toString().trim());
+    String words = passphraseWords.getText().toString().trim();
+    if (!words.isEmpty()) {
+      passphrase.setWords(Arrays.asList(words.split("\\s+")));
+    } else {
+      passphrase.setWords(null);
     }
-    fragment.setArguments(args);
-    return fragment;
+    ((OnCompleteListener) getActivity()).complete(passphrase);
   }
+
+  private void populateFields() {
+    if (passphrase.getKey() != null) {
+      passphraseKey.setText(passphrase.getKey());
+    }
+    if (passphrase.getWords() != null) {
+      String words = passphrase.getWords().toString();
+      passphraseWords.setText(words
+          .replaceAll("^\\[|\\]$", "")
+          .trim()
+          .replaceAll("\\s*,\\s+", ""));
+    }
+  }
+
+
   @FunctionalInterface
   public interface OnCompleteListener {
+
     void complete(Passphrase passphrase);
+
   }
 
 }
